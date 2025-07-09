@@ -35,22 +35,27 @@ An advanced Django web application that enables users to:
 
 ---
 
-### 📁 Project Structure
+### 🌐 Main Pages
 
-```
-jobportal/
-├── jobs/                   # App for job search, resume, analytics
-│   ├── models.py           # Job & Applicant models
-│   ├── views.py            # Search, resume, trending views
-│   ├── forms.py            # Applicant form for resume generation
-│   ├── utils.py            # AI and PDF helper functions
-│   ├── templates/jobs/     # All HTML templates
-│   └── urls.py             # Route mappings
-├── static/                 # CSS, JS, Images
-├── media/resumes/          # Generated PDF resumes
-├── settings.py             # Django config + Redis + Elasticsearch
-└── README.md               # You’re reading it
-```
+| Page                 | URL                     |
+| -------------------- | ----------------------- |
+| 🏠 Home              | `/`                     |
+| 🔍 Search Jobs       | `/search/`              |
+| 📝 Resume Generator  | `/apply/`               |
+| 📈 Trending Keywords | `/trending/`            |
+| 📋 Resume Download   | After resume generation |
+
+---
+
+### 📸 Screenshots
+
+| Screenshot                                     | Description                                                   |
+| ---------------------------------------------- | ------------------------------------------------------------- |
+| ![Home](screenshots/home.png)                  | 🏠 **Home Page** – Overview and entry point to all features   |
+| ![Job Search](screenshots/job_search.png)      | 🔍 **Job Search** – Elasticsearch-powered search with filters |
+| ![Resume Form](screenshots/resume_form.png)    | 📝 **Resume Generator Form** – Applicant form for AI summary  |
+| ![PDF Success](screenshots/pdf_success.png)    | 📋 **Resume Success** – PDF download confirmation view        |
+| ![Trending](screenshots/trending_keywords.png) | 📈 **Trending Page** – Top searched job queries visualized    |
 
 ---
 
@@ -59,8 +64,8 @@ jobportal/
 1. **Clone the repo**
 
 ```bash
-git clone https://github.com/yourusername/job-resume-portal.git
-cd job-resume-portal
+git clone https://github.com/dhirajdurgade7758/jobportal.git
+cd jobportal
 ```
 
 2. **Create virtual environment**
@@ -99,29 +104,6 @@ python manage.py runserver
 
 ---
 
-### 🌐 Main Pages
-
-| Page                 | URL                     |
-| -------------------- | ----------------------- |
-| 🏠 Home              | `/`                     |
-| 🔍 Search Jobs       | `/search/`              |
-| 📝 Resume Generator  | `/apply/`               |
-| 📈 Trending Keywords | `/trending/`            |
-| 📋 Resume Download   | After resume generation |
-
----
-
-### 📸 Screenshots
-
-*Add screenshots here of:*
-
-* Resume Generator form
-* PDF download screen
-* Job search page
-* Trending queries chart
-
----
-
 ### ✅ Highlights
 
 * 100% functional AI resume builder
@@ -129,12 +111,6 @@ python manage.py runserver
 * Caching via Redis for speed
 * Production-ready, modular Django codebase
 * Easy to extend with authentication, dashboards, etc.
-
----
-
-### 📓 License
-
-MIT License
 
 ---
 
@@ -151,3 +127,5 @@ MIT License
 
 Feel free to fork, star, and raise PRs or issues.
 This project is a great foundation for job boards, resume tools, or career assistant apps!
+
+
