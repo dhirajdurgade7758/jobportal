@@ -1,0 +1,13 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+  <h2>Upload CSV for Jobs</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label><strong>Select CSV File:</strong></label><br>
+    <input type="file" name="csv_file" accept=".csv" required><br><br>
+    <button type="submit" class="button">Upload</button>
+  </form>
+  <br>
+  <a href="{% url 'admin:jobs_job_changelist' %}">Back to Job list</a>
+{% endblock %}
+

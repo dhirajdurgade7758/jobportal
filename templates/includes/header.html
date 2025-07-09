@@ -1,0 +1,154 @@
+{% load static %}
+<header class="flex items-center justify-between bg-gradient-to-r from-indigo-800 to-purple-800 h-20 px-8 text-white sticky top-0 z-40 shadow-md">
+    <!-- Logo and Branding -->
+    <div class="flex items-center gap-6">
+        <a class="flex items-center gap-3" href="{% url 'home' %}">
+            <img class="h-8" src="{% static 'images/logo.svg' %}" alt="JobPortalAI Logo"/>
+            <span class="text-xl font-bold text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-300 to-purple-300">JobPortalAI</span>
+        </a>
+        <div class="text-sm bg-indigo-700 px-3 py-1 rounded-full flex items-center gap-2">
+            <span class="h-2 w-2 bg-green-400 rounded-full animate-pulse"></span>
+            <span id="online-user-count">Jobs Available</span>
+        </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="hidden md:block">
+        <ul class="flex items-center space-x-6">
+            <!-- Primary Navigation Items -->
+            <li>
+                <a href="{% url 'home' %}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors {% if active_tab == 'home' %}bg-indigo-900{% endif %}">
+                    Home
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'job_search' %}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors {% if active_tab == 'job_search' %}bg-indigo-900{% endif %}">
+                    Job Search
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'resume_home' %}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors {% if active_tab == 'resume_builder' %}bg-indigo-900{% endif %}">
+                    Resume Builder
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'saved_jobs' %}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors {% if active_tab == 'saved_jobs' %}bg-indigo-900{% endif %}">
+                    Saved Jobs
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'my_applications' %}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors {% if active_tab == 'my_applications' %}bg-indigo-900{% endif %}">
+                    My Applications
+                </a>
+            </li>
+
+            <!-- Quick Actions Dropdown -->
+            <li x-data="{ quickActionsOpen: false }" class="relative">
+                <button @click="quickActionsOpen = !quickActionsOpen" 
+                        class="flex items-center px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors">
+                    Quick Tools
+                    <svg class="ml-1 h-4 w-4 transition-transform duration-200" :class="{'rotate-180': quickActionsOpen}" 
+                         fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                
+                <div x-show="quickActionsOpen" x-cloak 
+                     class="absolute right-0 mt-2 w-56 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-20"
+                     x-transition:enter="transition ease-out duration-100"
+                     x-transition:enter-start="transform opacity-0 scale-95"
+                     x-transition:enter-end="transform opacity-100 scale-100"
+                     x-transition:leave="transition ease-in duration-75"
+                     x-transition:leave-start="transform opacity-100 scale-100"
+                     x-transition:leave-end="transform opacity-0 scale-95">
+                    <div class="py-1">
+                        <a href="{% url 'resume_home' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <svg class="mr-3 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Create Resume
+                        </a>
+                        <a href="{% url 'trending_queries' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <svg class="mr-3 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                            Trending Jobs
+                        </a>
+                        <a href="{% url 'saved_jobs' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <svg class="mr-3 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                            </svg>
+                            Saved Jobs
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- User Controls -->
+    <div class="flex items-center gap-4">
+        {% if request.user.is_authenticated %}
+        <!-- User Dropdown -->
+        <div x-data="{ dropdownOpen: false }" class="relative">
+            <button @click="dropdownOpen = !dropdownOpen" 
+                    class="flex items-center gap-2 focus:outline-none">
+                <img class="h-8 w-8 rounded-full object-cover border-2 border-indigo-400" 
+                     src="{{ request.user.profile.avatar.url }}" alt="User profile">
+                <span class="hidden md:inline text-sm font-medium">{{ request.user.username }}</span>
+                <svg class="ml-1 h-4 w-4 transition-transform duration-200" :class="{'rotate-180': dropdownOpen}" 
+                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+            
+            <div x-show="dropdownOpen" x-cloak @click.away="dropdownOpen = false"
+                 class="absolute right-0 mt-2 w-48 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-20"
+                 x-transition:enter="transition ease-out duration-100"
+                 x-transition:enter-start="transform opacity-0 scale-95"
+                 x-transition:enter-end="transform opacity-100 scale-100"
+                 x-transition:leave="transition ease-in duration-75"
+                 x-transition:leave-start="transform opacity-100 scale-100"
+                 x-transition:leave-end="transform opacity-0 scale-95">
+                <div class="py-1">
+                    <a href="{% url 'profile' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        My Profile
+                    </a>
+                    <a href="{% url 'profile-edit' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        Edit Profile
+                    </a>
+                    <a href="{% url 'my_applications' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        My Applications
+                    </a>
+                    <div class="border-t border-gray-200 my-1"></div>
+                    <a href="{% url 'account_logout' %}" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                        Log Out
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <!-- Auth Buttons -->
+        <div class="flex items-center gap-2">
+            <a href="{% url 'account_login' %}" class="px-3 py-1.5 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors">
+                Login
+            </a>
+            <a href="{% url 'account_signup' %}" class="px-4 py-1.5 bg-blue-500 rounded-md text-sm font-medium hover:bg-blue-600 transition-colors">
+                Sign Up
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</header>
+
+<style>
+    .text-gradient {
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    [x-cloak] { display: none !important; }
+    .shadow-md {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+</style>

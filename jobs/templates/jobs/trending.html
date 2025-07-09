@@ -1,0 +1,175 @@
+{% extends "jobs/base.html" %}
+{% block title %}Trending Searches | JobPortal{% endblock %}
+
+{% block extra_head %}
+<style>
+    :root {
+        --primary-color: #4361ee;
+        --secondary-color: #3a0ca3;
+        --dark-bg: #121212;
+        --dark-card: #1e1e1e;
+        --dark-border: #333;
+        --dark-text: #f0f0f0;
+        --dark-text-secondary: #b0b0b0;
+    }
+
+    .trending-header {
+        position: relative;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+    }
+
+    .trending-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        border-radius: 3px;
+    }
+
+    .trending-table {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    [data-bs-theme="dark"] .trending-table {
+        background-color: var(--dark-card);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    [data-bs-theme="dark"] .table {
+        color: var(--dark-text);
+    }
+
+    [data-bs-theme="dark"] .table-light {
+        background-color: #252525;
+        color: var(--dark-text);
+    }
+
+    [data-bs-theme="dark"] .table-hover tbody tr:hover {
+        background-color: rgba(67, 97, 238, 0.1);
+    }
+
+    .query-link {
+        color: var(--primary-color);
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .query-link:hover {
+        color: var(--secondary-color);
+        text-decoration: underline;
+    }
+
+    [data-bs-theme="dark"] .query-link {
+        color: #7b66ff;
+    }
+
+    [data-bs-theme="dark"] .query-link:hover {
+        color: #a78bfa;
+    }
+
+    .search-count {
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+
+    [data-bs-theme="dark"] .search-count {
+        color: #7b66ff;
+    }
+
+    .empty-state {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 2rem;
+        text-align: center;
+        border-radius: 10px;
+        background-color: rgba(67, 97, 238, 0.05);
+    }
+
+    [data-bs-theme="dark"] .empty-state {
+        background-color: rgba(123, 102, 255, 0.05);
+    }
+
+    .rank-badge {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+        .trending-header h2 {
+            font-size: 1.5rem;
+        }
+        
+        .trending-header::after {
+            width: 80px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="trending-header text-center">
+        <h2><i class="fas fa-fire me-2"></i> Trending Job Searches</h2>
+        <p class="text-muted">Discover what others are searching for</p>
+    </div>
+
+    {% if trending_queries %}
+    <div class="table-responsive trending-table mb-5">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col" style="width: 80px;">Rank</th>
+                    <th scope="col">Search Query</th>
+                    <th scope="col" class="text-end" style="width: 150px;">Search Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for query, score in trending_queries %}
+                <tr>
+                    <td>
+                        <div class="rank-badge">
+                            {{ forloop.counter }}
+                        </div>
+                    </td>
+                    <td>
+                        <a href="{% url 'job_search' %}?q={{ query }}" class="query-link">
+                            <i class="fas fa-search me-2"></i>{{ query }}
+                        </a>
+                    </td>
+                    <td class="text-end">
+                        <span class="search-count">{{ score|floatformat:0 }}</span>
+                        <small class="text-muted ms-1">times</small>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon mb-3">
+            <i class="fas fa-search fa-3x text-muted"></i>
+        </div>
+        <h4>No trending searches yet</h4>
+        <p class="text-muted mb-4">Popular search queries will appear here as people search for jobs</p>
+        <a href="{% url 'job_search' %}" class="btn btn-primary px-4">
+            <i class="fas fa-search me-2"></i> Start Searching
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

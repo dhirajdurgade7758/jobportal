@@ -1,0 +1,710 @@
+{% extends "jobs/base.html" %}
+{% block title %}Job Search{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Search Container Styles */
+    .search-container {
+        position: relative;
+        max-width: 800px;
+        margin: 0 auto 40px;
+    }
+    
+    #jobSearchInput {
+        width: 100%;
+        padding: 15px 25px;
+        font-size: 18px;
+        border: 2px solid #e0e3e8;
+        border-radius: 10px;
+        outline: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    #jobSearchInput:focus {
+        border-color: #4361ee;
+        box-shadow: 0 2px 15px rgba(67, 97, 238, 0.1);
+    }
+    
+    .autocomplete-suggestions {
+        position: absolute;
+        width: 100%;
+        max-height: 350px;
+        overflow-y: auto;
+        background: white;
+        border: 1px solid #e0e3e8;
+        border-top: none;
+        border-radius: 0 0 10px 10px;
+        z-index: 1000;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        display: none;
+    }
+    
+    .suggestion {
+        padding: 12px 25px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border-bottom: 1px solid #f0f2f5;
+        display: flex;
+        align-items: center;
+    }
+    
+    .suggestion:last-child {
+        border-bottom: none;
+    }
+    
+    .suggestion:hover {
+        background-color: #f8f9ff;
+    }
+    
+    .suggestion .highlight {
+        font-weight: 600;
+        color: #4361ee;
+    }
+    
+    .no-suggestions {
+        padding: 15px 25px;
+        color: #6c757d;
+        font-style: italic;
+    }
+    
+    /* Job Card Styles */
+    .job-card {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        height: 100%;
+        overflow: hidden;
+    }
+    
+    .job-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .job-card-header {
+        padding: 20px;
+        border-bottom: 1px solid #f0f2f5;
+    }
+    
+    .job-card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #2d3748;
+    }
+    
+    .job-card-subtitle {
+        color: #6c757d;
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+    }
+    
+    .job-card-body {
+        padding: 20px;
+    }
+    
+    .job-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .job-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.9rem;
+        color: #4a5568;
+    }
+    
+    .job-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 15px 0;
+    }
+    
+    .job-tag {
+        background: #f0f7ff;
+        color: #4361ee;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+    
+    .job-description {
+        color: #4a5568;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    
+    .job-card-footer {
+        padding: 15px 20px;
+        background: #f9fafc;
+        border-top: 1px solid #f0f2f5;
+    }
+    
+    /* Loading Indicator */
+    .loading {
+        display: none;
+        text-align: center;
+        padding: 40px;
+    }
+    
+    /* Pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 40px;
+    }
+    
+    .page-item.active .page-link {
+        background-color: #4361ee;
+        border-color: #4361ee;
+    }
+    
+    .page-link {
+        color: #4361ee;
+        padding: 8px 16px;
+        margin: 0 5px;
+        border-radius: 8px;
+        border: 1px solid #e0e3e8;
+    }
+    
+    .page-link:hover {
+        background-color: #f0f7ff;
+        color: #3a0ca3;
+    }
+    
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
+    
+    .empty-state-icon {
+        font-size: 3rem;
+        color: #cbd5e0;
+        margin-bottom: 20px;
+    }
+    
+    .empty-state-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #2d3748;
+    }
+    
+    .empty-state-text {
+        color: #6c757d;
+        max-width: 500px;
+        margin: 0 auto 20px;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        #jobSearchInput {
+            padding: 12px 20px;
+            font-size: 16px;
+        }
+        
+        .job-card-header,
+        .job-card-body,
+        .job-card-footer {
+            padding: 15px;
+        }
+    }
+/* Search Container Styles */
+.search-container {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto 40px;
+}
+
+#jobSearchInput {
+    width: 100%;
+    padding: 15px 25px;
+    font-size: 18px;
+    border: 2px solid #e0e3e8;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    /* Remove right border radius when in input group */
+    border-radius: 10px 0 0 10px !important;
+}
+
+/* Search button specific styles */
+#searchForm .btn {
+    height: auto; /* Match input height */
+    border-radius: 0 10px 10px 0 !important;
+    border-left: none; /* Remove double border */
+}
+
+/* Focus state for the input group */
+.input-group:focus-within #jobSearchInput {
+    border-color: #4361ee;
+    box-shadow: 0 2px 15px rgba(67, 97, 238, 0.1);
+}
+
+.input-group:focus-within .btn {
+    border-color: #4361ee;
+    background-color: #3a56e8;
+}
+
+    /* Dark Mode Styles */
+    [data-bs-theme="dark"] .job-card {
+        background-color: #1e1e1e;
+        border: 1px solid #2d2d2d;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    [data-bs-theme="dark"] .job-card:hover {
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    [data-bs-theme="dark"] .job-card-title {
+        color: #f0f0f0;
+    }
+
+    [data-bs-theme="dark"] .job-card-subtitle {
+        color: #a0a0a0;
+    }
+
+    [data-bs-theme="dark"] .job-card-header {
+        border-bottom-color: #2d2d2d;
+    }
+
+    [data-bs-theme="dark"] .job-meta-item {
+        color: #b0b0b0;
+    }
+
+    [data-bs-theme="dark"] .job-meta-item .text-muted {
+        color: #808080 !important;
+    }
+
+    [data-bs-theme="dark"] .job-description {
+        color: #c0c0c0;
+    }
+
+    [data-bs-theme="dark"] .job-card-footer {
+        background-color: #252525;
+        border-top-color: #2d2d2d;
+    }
+
+    [data-bs-theme="dark"] .job-tag {
+        background-color: #2a3a6e;
+        color: #a0c4ff;
+    }
+
+    [data-bs-theme="dark"] .btn-outline-primary {
+        color: #a0c4ff;
+        border-color: #4361ee;
+    }
+
+    [data-bs-theme="dark"] .btn-outline-primary:hover {
+        background-color: #4361ee;
+        color: white;
+    }
+
+    [data-bs-theme="dark"] .btn-outline-secondary {
+        color: #b0b0b0;
+        border-color: #4a5568;
+    }
+
+    [data-bs-theme="dark"] .btn-outline-secondary:hover {
+        background-color: #4a5568;
+        color: white;
+    }
+
+    [data-bs-theme="dark"] .badge.bg-primary {
+        background-color: #4361ee !important;
+    }
+
+    /* Improved empty state for dark mode */
+    [data-bs-theme="dark"] .empty-state-icon {
+        color: #4a5568;
+    }
+
+    [data-bs-theme="dark"] .empty-state-title {
+        color: #f0f0f0;
+    }
+
+    [data-bs-theme="dark"] .empty-state-text {
+        color: #a0a0a0;
+    }
+
+    [data-bs-theme="dark"] .trending-keywords .badge {
+        background-color: #2a2a2a !important;
+        color: #c0c0c0 !important;
+    }
+
+    /* Dark mode for autocomplete suggestions */
+    [data-bs-theme="dark"] .autocomplete-suggestions {
+        background-color: #252525;
+        border-color: #2d2d2d;
+    }
+
+    [data-bs-theme="dark"] .suggestion {
+        border-bottom-color: #2d2d2d;
+    }
+
+    [data-bs-theme="dark"] .suggestion:hover {
+        background-color: #2a2a2a;
+    }
+
+    [data-bs-theme="dark"] .no-suggestions {
+        color: #808080;
+    }
+
+    [data-bs-theme="dark"] .suggestion .highlight {
+        color: #4cc9f0;
+    }
+
+    /* Pagination dark mode */
+    [data-bs-theme="dark"] .page-link {
+        color: #a0c4ff;
+        border-color: #4a5568;
+        background-color: #252525;
+    }
+
+    [data-bs-theme="dark"] .page-link:hover {
+        background-color: #2a3a6e;
+        color: white;
+    }
+
+    [data-bs-theme="dark"] .page-item.active .page-link {
+        background-color: #4361ee;
+        border-color: #4361ee;
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4">Find Your Dream Job</h1>
+    
+  <!-- Enhanced Search Form -->
+<div class="search-container">
+    <form id="searchForm" method="get" class="mb-4">
+        <div class="input-group" style="display: flex; align-items: stretch;">
+            <input type="text" id="jobSearchInput" name="q" 
+                   placeholder="Job title, company, or skills..." 
+                   autocomplete="off"
+                   value="{{ query }}"
+                   class="form-control"
+                   style="flex: 1; min-width: 0; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+            <button type="submit" class="btn btn-primary px-4"
+                    style="border-top-left-radius: 0; border-bottom-left-radius: 0; white-space: nowrap;">
+                <i class="fas fa-search me-1"></i> Search
+            </button>
+        </div>
+        <div id="suggestions" class="autocomplete-suggestions"></div>
+    </form>
+</div>
+    <div class="loading">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-3">Searching for matching jobs...</p>
+    </div>
+    
+    <!-- Job Results -->
+    {% if query %}
+        {% if results %}
+            <div class="mb-4 text-center">
+                <p class="text-muted">Found {{ results|length }} job{{ results|length|pluralize }} matching "{{ query }}"</p>
+            </div>
+            
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for job in results %}
+                <div class="col">
+                    <div class="card job-card h-100">
+                        <div class="job-card-header">
+                            <h3 class="job-card-title">{{ job.title }}</h3>
+                            <h6 class="job-card-subtitle">{{ job.company_name }}</h6>
+                            <span class="badge bg-primary">{{ job.job_type }}</span>
+                        </div>
+                        
+                        <div class="job-card-body">
+                            <div class="job-meta">
+                                <span class="job-meta-item">
+                                    <i class="fas fa-map-marker-alt text-muted"></i>
+                                    {{ job.location }}
+                                </span>
+                                {% if job.salary_range %}
+                                <span class="job-meta-item">
+                                    <i class="fas fa-dollar-sign text-muted"></i>
+                                    {{ job.salary_range }}
+                                </span>
+                                {% endif %}
+                            </div>
+                            
+                        {% if job.tags %}
+                        <div class="job-tags">
+                            {% for tag in job.tags.split %}
+                                <span class="job-tag">{{ tag.strip }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                            
+                            <div class="job-description">
+                                {{ job.description|truncatewords:25 }}
+                            </div>
+                        </div>
+                        
+                      <div class="job-card-footer d-flex justify-content-between align-items-center">
+    <a href="{% url 'job_detail' job.id %}" class="btn btn-outline-primary">
+        View Details <i class="fas fa-arrow-right ms-2"></i>
+    </a>
+    <button class="btn {% if job.id in saved_job_ids %}btn-success{% else %}btn-outline-secondary{% endif %} save-job-btn" 
+            data-job-id="{{ job.id }}">
+        <i class="{% if job.id in saved_job_ids %}fas{% else %}far{% endif %} fa-bookmark me-2"></i>
+        {% if job.id in saved_job_ids %}Saved{% else %}Save{% endif %}
+    </button>
+</div> 
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Job search pagination" class="pagination">
+                <ul class="pagination">
+                    {% if prev_page %}
+                    <li class="page-item">
+                        <a class="page-link" href="?q={{ query }}&page={{ prev_page }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo; Previous</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for i in page_range %}
+                        {% if i == page %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ i }}</span>
+                        </li>
+                        {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?q={{ query }}&page={{ i }}">{{ i }}</a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if next_page %}
+                    <li class="page-item">
+                        <a class="page-link" href="?q={{ query }}&page={{ next_page }}" aria-label="Next">
+                            <span aria-hidden="true">Next &raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 class="empty-state-title">No jobs found</h3>
+                <p class="empty-state-text">We couldn't find any jobs matching "{{ query }}". Try different keywords or more general terms.</p>
+                <button class="btn btn-primary" onclick="document.getElementById('jobSearchInput').focus()">
+                    <i class="fas fa-search me-2"></i> Try another search
+                </button>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fas fa-search"></i>
+            </div>
+            <h3 class="empty-state-title">Start your job search</h3>
+            <p class="empty-state-text">Enter keywords in the search box above to find your perfect job opportunity.</p>
+            <div class="trending-keywords mt-4">
+                <span class="text-muted me-2">Popular searches:</span>
+                {% for keyword in trending_keywords|slice:":5" %}
+                <a href="?q={{ keyword|urlencode }}" class="badge bg-light text-dark text-decoration-none me-2">
+                    {{ keyword }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Toast Notifications -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <!-- Success Toast -->
+    <div id="saveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-success text-white">
+            <strong class="me-auto">Success</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="toastMessage">
+            Job saved successfully!
+        </div>
+    </div>
+    
+    <!-- Error Toast -->
+    <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-danger text-white">
+            <strong class="me-auto">Error</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="errorToastMessage">
+            Error saving job
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Save Job Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add click event for all save buttons
+    document.querySelectorAll('.save-job-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const jobId = this.getAttribute('data-job-id');
+            const btn = this;
+            
+            fetch(`/jobs/${jobId}/save/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    // Toggle button appearance
+                    if(data.saved) {
+                        btn.innerHTML = '<i class="fas fa-bookmark me-2"></i> Saved';
+                        btn.classList.remove('btn-outline-secondary');
+                        btn.classList.add('btn-success');
+                    } else {
+                        btn.innerHTML = '<i class="far fa-bookmark me-2"></i> Save';
+                        btn.classList.remove('btn-success');
+                        btn.classList.add('btn-outline-secondary');
+                    }
+                    
+                    // Show toast notification
+                    const toast = new bootstrap.Toast(document.getElementById('saveToast'));
+                    document.getElementById('toastMessage').innerText = data.message;
+                    toast.show();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Show error toast
+                const toast = new bootstrap.Toast(document.getElementById('errorToast'));
+                document.getElementById('errorToastMessage').innerText = 'Please login to save jobs';
+                toast.show();
+            });
+        });
+    });
+});
+</script>
+<script>
+    // Debounce function to limit how often we call the API
+    function debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
+    
+    // Highlight matching text in suggestions
+    function highlightMatch(text, query) {
+        if (!query) return text;
+        
+        const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
+        return text.replace(regex, '<span class="highlight">$1</span>');
+    }
+    
+    // Escape special regex characters
+    function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    
+    // Fetch job suggestions from backend
+    const fetchSuggestions = debounce(async function() {
+        const query = document.getElementById('jobSearchInput').value.trim();
+        const suggestionsContainer = document.getElementById('suggestions');
+        
+        if (query.length < 2) {
+            suggestionsContainer.style.display = 'none';
+            return;
+        }
+        
+        try {
+            const response = await fetch(`{% url 'job_search' %}?q=${encodeURIComponent(query)}&suggestions=1`);
+            const data = await response.json();
+            
+            suggestionsContainer.innerHTML = '';
+            
+            if (data.suggestions && data.suggestions.length > 0) {
+                data.suggestions.forEach(item => {
+                    const suggestionDiv = document.createElement('div');
+                    suggestionDiv.classList.add('suggestion');
+                    
+                    // Determine icon based on content
+                    let icon = 'fa-search';
+                    if (item.includes(' ')) icon = 'fa-briefcase';  // Likely a title
+                    else if (item === item.toUpperCase()) icon = 'fa-building';  // Likely a company
+                    else icon = 'fa-tag';  // Likely a skill
+                    
+                    suggestionDiv.innerHTML = `
+                        <i class="fas ${icon} me-3 text-muted"></i>
+                        <div>${highlightMatch(item, query)}</div>
+                    `;
+                    
+                    suggestionDiv.onclick = () => {
+                        document.getElementById('jobSearchInput').value = item;
+                        suggestionsContainer.style.display = 'none';
+                        document.getElementById('searchForm').submit();
+                    };
+                    
+                    suggestionsContainer.appendChild(suggestionDiv);
+                });
+                suggestionsContainer.style.display = 'block';
+            } else {
+                suggestionsContainer.innerHTML = '<div class="no-suggestions">No suggestions found</div>';
+                suggestionsContainer.style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Error fetching suggestions:', error);
+            suggestionsContainer.innerHTML = '<div class="no-suggestions">Error loading suggestions</div>';
+            suggestionsContainer.style.display = 'block';
+        }
+    }, 300);
+    
+    // Event listeners
+    document.getElementById('jobSearchInput').addEventListener('input', fetchSuggestions);
+    
+    document.getElementById('jobSearchInput').addEventListener('focus', function() {
+        if (this.value.trim().length >= 2) {
+            fetchSuggestions();
+        }
+    });
+    
+    document.addEventListener('click', (e) => {
+        if (e.target.id !== 'jobSearchInput') {
+            document.getElementById('suggestions').style.display = 'none';
+        }
+    });
+    
+    // Show loading indicator when form submits
+    document.getElementById('searchForm').addEventListener('submit', function() {
+        document.querySelector('.loading').style.display = 'block';
+        document.querySelector('.search-results').style.display = 'none';
+    });
+</script>
+{% endblock %}

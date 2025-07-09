@@ -1,0 +1,420 @@
+{% extends "jobs/base.html" %}
+{% block title %}Home | JobPortalAI{% endblock %}
+
+{% block extra_head %}
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+        border-radius: 16px;
+        color: white;
+        padding: 4rem 2rem;
+        margin-bottom: 3rem;
+    }
+    
+    .feature-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        height: 100%;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin: 0 auto 1rem;
+    }
+    
+    .trending-keywords {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+    
+    .trending-keywords .badge {
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .trending-keywords .badge:hover {
+        transform: translateY(-2px);
+    }
+    
+    .job-highlights {
+        margin-top: 3rem;
+    }
+    
+    .job-card {
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+    
+    .job-card:hover {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stats-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+    
+    .stats-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #4361ee;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stats-label {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+    
+    .testimonial-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        height: 100%;
+    }
+    
+    .testimonial-text {
+        font-style: italic;
+        margin-bottom: 1rem;
+    }
+    
+    .testimonial-author {
+        font-weight: bold;
+    }
+    
+    .testimonial-role {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    
+    /* Dark Mode Styles */
+    [data-bs-theme="dark"] .hero-section {
+        background: linear-gradient(135deg, #3a0ca3 0%, #24086d 100%);
+        color: #f0f0f0;
+    }
+
+    [data-bs-theme="dark"] .btn-outline-light {
+        color: #f0f0f0;
+        border-color: #f0f0f0;
+    }
+
+    [data-bs-theme="dark"] .btn-outline-light:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    [data-bs-theme="dark"] .feature-card {
+        background-color: #1e1e1e;
+        border: 1px solid #2d2d2d;
+    }
+
+    [data-bs-theme="dark"] .feature-card:hover {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    [data-bs-theme="dark"] .feature-icon {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    [data-bs-theme="dark"] .text-muted {
+        color: #a0a0a0 !important;
+    }
+
+    [data-bs-theme="dark"] .stats-card {
+        background-color: #1e1e1e;
+        border: 1px solid #2d2d2d;
+    }
+
+    [data-bs-theme="dark"] .stats-number {
+        color: #4cc9f0;
+    }
+
+    [data-bs-theme="dark"] .stats-label {
+        color: #a0a0a0;
+    }
+
+    [data-bs-theme="dark"] .job-card {
+        background-color: #1e1e1e;
+        border: 1px solid #2d2d2d;
+    }
+
+    [data-bs-theme="dark"] .job-card:hover {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    [data-bs-theme="dark"] .badge.bg-light {
+        background-color: #2a2a2a !important;
+        color: #f0f0f0 !important;
+    }
+
+    [data-bs-theme="dark"] .testimonial-card {
+        background-color: #1e1e1e;
+        border: 1px solid #2d2d2d;
+    }
+
+    [data-bs-theme="dark"] .testimonial-text {
+        color: #d0d0d0;
+    }
+
+    [data-bs-theme="dark"] .testimonial-role {
+        color: #a0a0a0;
+    }
+
+    [data-bs-theme="dark"] .bg-light {
+        background-color: #1e1e1e !important;
+        border: 1px solid #2d2d2d;
+    }
+
+    [data-bs-theme="dark"] .btn-outline-primary {
+        color: #4cc9f0;
+        border-color: #4cc9f0;
+    }
+
+    [data-bs-theme="dark"] .btn-outline-primary:hover {
+        background-color: #4cc9f0;
+        color: #121212;
+    }
+
+    /* Dark mode for trending keywords */
+    [data-bs-theme="dark"] .trending-keywords .badge {
+        background-color: #2a2a2a !important;
+        color: #f0f0f0 !important;
+        border: 1px solid #3a3a3a;
+    }
+
+    /* Dark mode for feature cards */
+    [data-bs-theme="dark"] .feature-card .btn-primary {
+        background-color: #4361ee;
+        border-color: #4361ee;
+    }
+
+    [data-bs-theme="dark"] .feature-card .btn-success {
+        background-color: #2e8b57;
+        border-color: #2e8b57;
+    }
+
+    [data-bs-theme="dark"] .feature-card .btn-info {
+        background-color: #3a86ff;
+        border-color: #3a86ff;
+    }
+
+    /* Dark mode for headings */
+    [data-bs-theme="dark"] h1, 
+    [data-bs-theme="dark"] h2, 
+    [data-bs-theme="dark"] h3, 
+    [data-bs-theme="dark"] h4, 
+    [data-bs-theme="dark"] h5, 
+    [data-bs-theme="dark"] h6 {
+        color: #f0f0f0;
+    }
+
+    /* Dark mode for paragraphs */
+    [data-bs-theme="dark"] p {
+        color: #d0d0d0;
+    }
+
+    /* Dark mode for links */
+    [data-bs-theme="dark"] a {
+        color: #4cc9f0;
+    }
+
+    [data-bs-theme="dark"] a:hover {
+        color: #3aa8f0;
+    }
+</style>
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container text-center py-4">
+        <h1 class="display-4 fw-bold mb-3">Find Your Dream Job Today</h1>
+        <p class="lead mb-4 opacity-75">AI-powered job matching and professional resume building</p>
+        
+        <div class="d-flex justify-content-center mt-4">
+            <a href="{% url 'job_search' %}" class="btn btn-light btn-lg me-3">
+                <i class="fas fa-search me-2"></i> Browse Jobs
+            </a>
+            <a href="{% url 'resume_home' %}" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-file-alt me-2"></i> Build Resume
+            </a>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <!-- Stats Section -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="stats-card">
+                <div class="stats-number">10,000+</div>
+                <div class="stats-label">Jobs Available</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stats-card">
+                <div class="stats-number">500+</div>
+                <div class="stats-label">Top Companies</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stats-card">
+                <div class="stats-number">95%</div>
+                <div class="stats-label">Success Rate</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row justify-content-center g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card feature-card shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon text-primary">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3 class="h5 fw-bold mb-3">Smart Job Search</h3>
+                    <p class="text-muted mb-4">Our AI-powered search understands what you're looking for and finds the best matches.</p>
+                    <a href="{% url 'job_search' %}" class="btn btn-primary w-100">Explore Jobs</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card feature-card shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon text-success">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3 class="h5 fw-bold mb-3">AI Resume Builder</h3>
+                    <p class="text-muted mb-4">Create professional, ATS-friendly resumes tailored to specific jobs in minutes.</p>
+                    <a href="{% url 'resume_home' %}" class="btn btn-success w-100">Build Resume</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card feature-card shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon text-info">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="h5 fw-bold mb-3">Career Insights</h3>
+                    <p class="text-muted mb-4">Discover trending skills and in-demand jobs in your industry.</p>
+                    <a href="{% url 'trending_queries' %}" class="btn btn-info w-100">View Trends</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trending Jobs Section -->
+    <section class="job-highlights">
+        <h2 class="text-center mb-4">🔥 Trending Jobs</h2>
+        <div class="row g-4">
+            {% for job in trending_jobs %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card job-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge bg-primary">{{ job.job_type }}</span>
+                            <small class="text-muted">{{ job.posted_date|timesince }} ago</small>
+                        </div>
+                        <h3 class="h5">{{ job.title }}</h3>
+                        <p class="text-muted mb-2">{{ job.company }}</p>
+                        <p class="mb-3">{{ job.location }}</p>
+                        
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            {% for skill in job.skills_required|slice:":3" %}
+                            <span class="badge bg-light text-dark">{{ skill }}</span>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold">${{ job.salary_range }}</span>
+                            <a href="{% url 'job_detail' job.id %}" class="btn btn-sm btn-outline-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'job_search' %}" class="btn btn-outline-primary">
+                View All Jobs <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="my-5 py-4">
+        <h2 class="text-center mb-4">💬 What Our Users Say</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "Found my dream job in just 2 weeks using JobPortalAI. The resume builder helped me stand out from other applicants!"
+                    </div>
+                    <div class="testimonial-author">Sarah Johnson</div>
+                    <div class="testimonial-role">Software Engineer at TechCorp</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "The AI job matching is incredible - it suggested positions I wouldn't have found on my own. Got 3 interviews in the first week!"
+                    </div>
+                    <div class="testimonial-author">Michael Chen</div>
+                    <div class="testimonial-role">Marketing Specialist</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "As a recruiter, I'm impressed by the quality of candidates from JobPortalAI. The resumes are consistently well-formatted and professional."
+                    </div>
+                    <div class="testimonial-author">David Wilson</div>
+                    <div class="testimonial-role">HR Director at InnovateCo</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="bg-light rounded-3 p-5 mb-5 text-center">
+        <h2 class="mb-3">Ready to advance your career?</h2>
+        <p class="lead mb-4">Join thousands of professionals who found their dream jobs with us</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-user-plus me-2"></i> Sign Up Free
+            </a>
+            <a href="{% url 'job_search' %}" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-search me-2"></i> Browse Jobs
+            </a>
+        </div>
+    </section>
+</div>
+{% endblock %}

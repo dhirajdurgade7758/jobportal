@@ -1,0 +1,320 @@
+{% extends "jobs/base.html" %}
+{% block title %}{{ job.title }} at {{ job.company_name }}{% endblock %}
+
+{% block extra_head %}
+<style>
+    .job-header {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+    .job-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 1.5rem;
+    }
+    .job-tag {
+        background-color: #e9f5ff;
+        color: #4361ee;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        display: inline-block;
+    }
+    .job-section {
+        margin-bottom: 2rem;
+    }
+    .similar-job-card {
+        transition: transform 0.3s ease;
+        height: 100%;
+    }
+    .similar-job-card:hover {
+        transform: translateY(-5px);
+    }
+
+
+    
+    /* Dark Mode Styles */
+    [data-bs-theme="dark"] .job-header {
+        background-color: #1e1e1e;
+        border: 1px solid #2d2d2d;
+    }
+
+    [data-bs-theme="dark"] .job-header h1,
+    [data-bs-theme="dark"] .job-header h2 {
+        color: #f0f0f0;
+    }
+
+    [data-bs-theme="dark"] .job-tag {
+        background-color: #2a3a6e;
+        color: #a0c4ff;
+    }
+
+    [data-bs-theme="dark"] .card {
+        background-color: #1e1e1e;
+        border: 1px solid #2d2d2d;
+    }
+
+    [data-bs-theme="dark"] .card-body {
+        color: #d0d0d0;
+    }
+
+    [data-bs-theme="dark"] .text-muted {
+        color: #a0a0a0 !important;
+    }
+
+    [data-bs-theme="dark"] .btn-outline-primary {
+        color: #4cc9f0;
+        border-color: #4cc9f0;
+    }
+
+    [data-bs-theme="dark"] .btn-outline-primary:hover {
+        background-color: #4cc9f0;
+        color: #121212;
+    }
+
+    [data-bs-theme="dark"] .btn-outline-secondary {
+        color: #b0b0b0;
+        border-color: #4a5568;
+    }
+
+    [data-bs-theme="dark"] .btn-outline-secondary:hover {
+        background-color: #4a5568;
+        color: white;
+    }
+
+    [data-bs-theme="dark"] .similar-job-card {
+        background-color: #1e1e1e;
+        border: 1px solid #2d2d2d;
+    }
+
+    [data-bs-theme="dark"] .similar-job-card:hover {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    [data-bs-theme="dark"] .similar-job-card .card-title {
+        color: #f0f0f0;
+    }
+
+    [data-bs-theme="dark"] .similar-job-card .card-subtitle {
+        color: #a0a0a0;
+    }
+
+    [data-bs-theme="dark"] .similar-job-card .card-text {
+        color: #d0d0d0;
+    }
+
+    [data-bs-theme="dark"] .card-footer {
+        background-color: #252525 !important;
+        border-top: 1px solid #2d2d2d !important;
+    }
+
+    [data-bs-theme="dark"] .badge.bg-primary {
+        background-color: #4361ee !important;
+    }
+
+    /* Save button states */
+    [data-bs-theme="dark"] .btn-success {
+        background-color: #2e8b57;
+        border-color: #2e8b57;
+    }
+
+    [data-bs-theme="dark"] .btn-success:hover {
+        background-color: #3aa76d;
+        border-color: #3aa76d;
+    }
+
+    /* Job description styling */
+    [data-bs-theme="dark"] .job-section h3 {
+        color: #f0f0f0;
+        border-bottom: 1px solid #2d2d2d;
+        padding-bottom: 0.5rem;
+    }
+
+    /* Apply button */
+    [data-bs-theme="dark"] .btn-primary {
+        background-color: #4361ee;
+        border-color: #4361ee;
+    }
+
+    [data-bs-theme="dark"] .btn-primary:hover {
+        background-color: #3a56e8;
+        border-color: #3a56e8;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Job Header -->
+    <div class="job-header">
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h1>{{ job.title }}</h1>
+                <h2 class="h4 text-muted">{{ job.company_name }}</h2>
+                <div class="d-flex align-items-center mt-2">
+                    <span class="badge bg-primary me-2">{{ job.get_job_type_display }}</span>
+                    <span><i class="fas fa-map-marker-alt me-1"></i> {{ job.location }}</span>
+                    {% if job.salary %}
+                    <span class="ms-3"><i class="fas fa-dollar-sign me-1"></i> {{ job.salary }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div>
+                <button class="btn {% if is_saved %}btn-success{% else %}btn-outline-secondary{% endif %} save-job-btn" 
+                        data-job-id="{{ job.id }}">
+                    <i class="{% if is_saved %}fas{% else %}far{% endif %} fa-bookmark me-2"></i>
+                    {% if is_saved %}Saved{% else %}Save{% endif %}
+                </button>
+            </div>
+        </div>
+        
+        <div class="mt-3">
+            {% for tag in job.tags.split %}
+                <span class="job-tag">{{ tag.strip }}</span>
+            {% endfor %}
+        </div>
+        
+        <div class="job-actions">
+            <a href="{% url 'apply_job' job.id %}" class="btn btn-primary">Apply Now</a>
+            <a href="{% url 'job_search' %}?q={{ job.company_name|urlencode }}" class="btn btn-outline-primary">
+                More jobs at {{ job.company_name }}
+            </a>
+        </div>
+    </div>
+    
+    <!-- Job Description -->
+    <div class="job-section">
+        <h3 class="mb-3">Job Description</h3>
+        <div class="card">
+            <div class="card-body">
+                {{ job.description|linebreaks }}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Job Details -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="job-section">
+                <h3 class="mb-3">Job Type</h3>
+                <div class="card">
+                    <div class="card-body">
+                        <p class="mb-0">{{ job.get_job_type_display }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="job-section">
+                <h3 class="mb-3">Location</h3>
+                <div class="card">
+                    <div class="card-body">
+                        <p class="mb-0">{{ job.location }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if job.salary %}
+    <div class="job-section">
+        <h3 class="mb-3">Salary</h3>
+        <div class="card">
+            <div class="card-body">
+                <p class="mb-0">${{ job.salary }}</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Posted Date -->
+    <div class="job-section">
+        <div class="text-muted">
+            <small>Posted {{ job.posted_at|timesince }} ago • Updated {{ job.updated_at|timesince }} ago</small>
+        </div>
+    </div>
+    
+    <!-- Similar Jobs -->
+    {% if similar_jobs %}
+    <div class="job-section">
+        <h3 class="mb-3">Similar Jobs</h3>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            {% for similar_job in similar_jobs %}
+            <div class="col">
+                <div class="card similar-job-card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ similar_job.title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ similar_job.company_name }}</h6>
+                        <span class="badge bg-primary mb-2">{{ similar_job.get_job_type_display }}</span>
+                        <p class="card-text">{{ similar_job.description|truncatewords:20 }}</p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="{% url 'job_detail' similar_job.id %}" class="btn btn-sm btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Save Job Functionality (same as in search page)
+document.addEventListener('DOMContentLoaded', function() {
+    const saveBtn = document.querySelector('.save-job-btn');
+    if (saveBtn) {
+        saveBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const jobId = this.getAttribute('data-job-id');
+            const btn = this;
+            
+            fetch(`/jobs/${jobId}/save/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if(response.status === 403) {
+                    window.location.href = '/accounts/login/?next=' + window.location.pathname;
+                    return Promise.reject('Authentication required');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if(data.success) {
+                    if(data.saved) {
+                        btn.innerHTML = '<i class="fas fa-bookmark me-2"></i> Saved';
+                        btn.classList.remove('btn-outline-secondary');
+                        btn.classList.add('btn-success');
+                    } else {
+                        btn.innerHTML = '<i class="far fa-bookmark me-2"></i> Save';
+                        btn.classList.remove('btn-success');
+                        btn.classList.add('btn-outline-secondary');
+                    }
+                    
+                    // Show toast
+                    const toastEl = document.getElementById('saveToast');
+                    const toastBody = toastEl.querySelector('.toast-body');
+                    toastBody.textContent = data.message;
+                    const toast = new bootstrap.Toast(toastEl);
+                    toast.show();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

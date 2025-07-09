@@ -1,0 +1,32 @@
+<!-- templates/admin/jobs/job/change_form.html -->
+{% extends "admin/change_form.html" %}
+{% load static %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+    .badge {
+        font-size: 0.9em;
+        padding: 0.35em 0.65em;
+    }
+    .bg-secondary { background-color: #6c757d; }
+    .bg-info { background-color: #0dcaf0; }
+    .bg-primary { background-color: #0d6efd; }
+    .bg-success { background-color: #198754; }
+    .bg-danger { background-color: #dc3545; }
+    .application-count {
+        font-weight: bold;
+        color: #0d6efd;
+    }
+    .saved-count {
+        font-weight: bold;
+        color: #198754;
+    }
+    [data-bs-theme="dark"] .application-count {
+        color: #6ea8fe;
+    }
+    [data-bs-theme="dark"] .saved-count {
+        color: #75b798;
+    }
+</style>
+{% endblock %}

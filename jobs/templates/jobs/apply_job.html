@@ -1,0 +1,264 @@
+{% extends "jobs/base.html" %}
+{% block title %}Apply to {{ job.title }}{% endblock %}
+
+{% block extra_head %}
+<style>
+    .application-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+    
+    .application-card .card-header {
+        background: linear-gradient(135deg, #4361ee, #3a0ca3);
+        color: white;
+        padding: 1.5rem;
+        border-bottom: none;
+    }
+    
+    .application-card .card-header h2 {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    .application-card .card-header p {
+        opacity: 0.9;
+        font-size: 0.95rem;
+    }
+    
+    .application-card .card-body {
+        padding: 2rem;
+    }
+    
+    .form-label {
+        font-weight: 500;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+    }
+    
+    [data-bs-theme="dark"] .form-label {
+        color: #f0f0f0;
+    }
+    
+    .form-control, .form-select, .form-textarea, .form-file {
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    [data-bs-theme="dark"] .form-control,
+    [data-bs-theme="dark"] .form-select,
+    [data-bs-theme="dark"] .form-textarea,
+    [data-bs-theme="dark"] .form-file {
+        border-color: #2d2d2d;
+        background-color: #1e1e1e;
+        color: #f0f0f0;
+    }
+    
+    .form-control:focus, .form-select:focus, .form-textarea:focus {
+        border-color: #4361ee;
+        box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.15);
+    }
+    
+    [data-bs-theme="dark"] .form-control:focus,
+    [data-bs-theme="dark"] .form-select:focus,
+    [data-bs-theme="dark"] .form-textarea:focus {
+        box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+    }
+    
+    .form-text {
+        font-size: 0.85rem;
+        color: #64748b;
+    }
+    
+    [data-bs-theme="dark"] .form-text {
+        color: #a0a0a0;
+    }
+    
+    .btn-submit {
+        background: linear-gradient(135deg, #4361ee, #3a0ca3);
+        border: none;
+        padding: 0.75rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+    }
+    
+    .btn-cancel {
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+    
+    [data-bs-theme="dark"] .btn-cancel {
+        border-color: #2d2d2d;
+    }
+    
+    .btn-cancel:hover {
+        background-color: #f8f9fa;
+        border-color: #cbd5e0;
+    }
+    
+    [data-bs-theme="dark"] .btn-cancel:hover {
+        background-color: #252525;
+        border-color: #3a3a3a;
+    }
+    
+    .file-upload-wrapper {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+    
+    .file-upload-input {
+        width: 100%;
+        height: calc(2.5rem + 2px);
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+        cursor: pointer;
+    }
+    
+    .file-upload-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem 1rem;
+        background-color: #f8f9fa;
+        border: 1px dashed #cbd5e0;
+        border-radius: 8px;
+        height: calc(2.5rem + 2px);
+    }
+    
+    [data-bs-theme="dark"] .file-upload-label {
+        background-color: #252525;
+        border-color: #3a3a3a;
+    }
+    
+    .file-upload-label-text {
+        color: #64748b;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 1rem;
+    }
+    
+    [data-bs-theme="dark"] .file-upload-label-text {
+        color: #a0a0a0;
+    }
+    
+    .file-upload-button {
+        background-color: #e2e8f0;
+        color: #2d3748;
+        border: none;
+        padding: 0.25rem 0.75rem;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+    
+    [data-bs-theme="dark"] .file-upload-button {
+        background-color: #3a3a3a;
+        color: #f0f0f0;
+    }
+    
+    .invalid-feedback {
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card application-card">
+                <div class="card-header">
+                    <h2>Apply to {{ job.title }}</h2>
+                    <p class="mb-0">{{ job.company_name }} • {{ job.location }}</p>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Resume Upload -->
+                        <div class="mb-4">
+                            <label for="{{ form.resume.id_for_label }}" class="form-label">
+                                {{ form.resume.label }}
+                            </label>
+                            <div class="file-upload-wrapper">
+                                {{ form.resume }}
+                                <label for="{{ form.resume.id_for_label }}" class="file-upload-label">
+                                    <span class="file-upload-label-text" id="resume-file-name">Choose file or drag here</span>
+                                    <span class="file-upload-button">Browse</span>
+                                </label>
+                            </div>
+                            <div class="form-text">PDF, DOC, or DOCX format (max 5MB)</div>
+                            {% if form.resume.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.resume.errors.as_text }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Cover Letter -->
+                        <div class="mb-4">
+                            <label for="{{ form.cover_letter.id_for_label }}" class="form-label">
+                                {{ form.cover_letter.label }}
+                            </label>
+                            <textarea class="form-control form-textarea" id="{{ form.cover_letter.id_for_label }}" 
+                                      name="{{ form.cover_letter.name }}" rows="6" 
+                                      placeholder="Write your cover letter here...">{{ form.cover_letter.value|default:'' }}</textarea>
+                            {% if form.cover_letter.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.cover_letter.errors.as_text }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Form Actions -->
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-submit btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i> Submit Application
+                            </button>
+                            <a href="{% url 'job_detail' job.id %}" class="btn btn-cancel">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // File input display
+    document.getElementById('{{ form.resume.id_for_label }}').addEventListener('change', function(e) {
+        const fileName = e.target.files[0] ? e.target.files[0].name : 'Choose file or drag here';
+        document.getElementById('resume-file-name').textContent = fileName;
+    });
+    
+    // Form validation
+    document.addEventListener('DOMContentLoaded', function() {
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    });
+</script>
+{% endblock %}

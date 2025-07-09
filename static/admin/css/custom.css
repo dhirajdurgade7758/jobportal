@@ -1,0 +1,27 @@
+/* static/admin/css/custom.css */
+/* Custom admin styles */
+#changelist-filter h2 {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.object-tools {
+    margin-bottom: 15px;
+}
+
+.module table {
+    width: 100%;
+}
+
+/* Dark mode support */
+[data-bs-theme="dark"] #changelist-filter h2 {
+    color: #aaa;
+}
+
+[data-bs-theme="dark"] .paginator {
+    background: #333;
+    color: #fff;
+}

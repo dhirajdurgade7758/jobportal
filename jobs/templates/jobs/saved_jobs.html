@@ -1,0 +1,361 @@
+{% extends "jobs/base.html" %}
+{% block title %}Saved Jobs{% endblock %}
+{% block extra_head %}
+<style>
+    .empty-state {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    .empty-state-icon {
+        font-size: 4rem;
+        color: #e9ecef;
+    }
+    .empty-state-title {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .empty-state-text {
+        color: #6c757d;
+        margin-bottom: 1.5rem;
+    }
+
+
+    /* Job Card Styles */
+    .job-card {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        height: 100%;
+        overflow: hidden;
+    }
+    
+    .job-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .job-card-header {
+        padding: 20px;
+        border-bottom: 1px solid #f0f2f5;
+    }
+    
+    .job-card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #2d3748;
+    }
+    
+    .job-card-subtitle {
+        color: #6c757d;
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+    }
+    
+    .job-card-body {
+        padding: 20px;
+    }
+    
+    .job-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .job-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.9rem;
+        color: #4a5568;
+    }
+    
+    .job-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 15px 0;
+    }
+    
+    .job-tag {
+        background: #f0f7ff;
+        color: #4361ee;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+    
+    .job-description {
+        color: #4a5568;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    
+    .job-card-footer {
+        padding: 15px 20px;
+        background: #f9fafc;
+        border-top: 1px solid #f0f2f5;
+    }
+    
+   
+    
+    /* Pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 40px;
+    }
+    
+    .page-item.active .page-link {
+        background-color: #4361ee;
+        border-color: #4361ee;
+    }
+    
+    .page-link {
+        color: #4361ee;
+        padding: 8px 16px;
+        margin: 0 5px;
+        border-radius: 8px;
+        border: 1px solid #e0e3e8;
+    }
+    
+    .page-link:hover {
+        background-color: #f0f7ff;
+        color: #3a0ca3;
+    }
+    
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
+    
+    .empty-state-icon {
+        font-size: 3rem;
+        color: #cbd5e0;
+        margin-bottom: 20px;
+    }
+    
+    .empty-state-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #2d3748;
+    }
+    
+    .empty-state-text {
+        color: #6c757d;
+        max-width: 500px;
+        margin: 0 auto 20px;
+    }
+    
+    /* Dark Mode Styles */
+    [data-bs-theme="dark"] .job-card {
+        background-color: #1e1e1e;
+        border: 1px solid #2d2d2d;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    [data-bs-theme="dark"] .job-card:hover {
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    [data-bs-theme="dark"] .job-card-title {
+        color: #f0f0f0;
+    }
+
+    [data-bs-theme="dark"] .job-card-subtitle {
+        color: #a0a0a0;
+    }
+
+    [data-bs-theme="dark"] .job-card-header {
+        border-bottom-color: #2d2d2d;
+    }
+
+    [data-bs-theme="dark"] .job-meta-item {
+        color: #b0b0b0;
+    }
+
+    [data-bs-theme="dark"] .job-meta-item .text-muted {
+        color: #808080 !important;
+    }
+
+    [data-bs-theme="dark"] .job-description {
+        color: #c0c0c0;
+    }
+
+    [data-bs-theme="dark"] .job-card-footer {
+        background-color: #252525;
+        border-top-color: #2d2d2d;
+    }
+
+    [data-bs-theme="dark"] .job-tag {
+        background-color: #2a3a6e;
+        color: #a0c4ff;
+    }
+
+    [data-bs-theme="dark"] .btn-outline-primary {
+        color: #a0c4ff;
+        border-color: #4361ee;
+    }
+
+    [data-bs-theme="dark"] .btn-outline-primary:hover {
+        background-color: #4361ee;
+        color: white;
+    }
+
+    [data-bs-theme="dark"] .btn-outline-secondary {
+        color: #b0b0b0;
+        border-color: #4a5568;
+    }
+
+    [data-bs-theme="dark"] .btn-outline-secondary:hover {
+        background-color: #4a5568;
+        color: white;
+    }
+
+    [data-bs-theme="dark"] .badge.bg-primary {
+        background-color: #4361ee !important;
+    }
+
+    /* Improved empty state for dark mode */
+    [data-bs-theme="dark"] .empty-state-icon {
+        color: #4a5568;
+    }
+
+    [data-bs-theme="dark"] .empty-state-title {
+        color: #f0f0f0;
+    }
+
+    [data-bs-theme="dark"] .empty-state-text {
+        color: #a0a0a0;
+    }
+
+    [data-bs-theme="dark"] .trending-keywords .badge {
+        background-color: #2a2a2a !important;
+        color: #c0c0c0 !important;
+    }
+
+    /* Dark mode for autocomplete suggestions */
+    [data-bs-theme="dark"] .autocomplete-suggestions {
+        background-color: #252525;
+        border-color: #2d2d2d;
+    }
+
+    [data-bs-theme="dark"] .suggestion {
+        border-bottom-color: #2d2d2d;
+    }
+
+    [data-bs-theme="dark"] .suggestion:hover {
+        background-color: #2a2a2a;
+    }
+
+    [data-bs-theme="dark"] .no-suggestions {
+        color: #808080;
+    }
+
+    [data-bs-theme="dark"] .suggestion .highlight {
+        color: #4cc9f0;
+    }
+
+    /* Pagination dark mode */
+    [data-bs-theme="dark"] .page-link {
+        color: #a0c4ff;
+        border-color: #4a5568;
+        background-color: #252525;
+    }
+
+    [data-bs-theme="dark"] .page-link:hover {
+        background-color: #2a3a6e;
+        color: white;
+    }
+
+    [data-bs-theme="dark"] .page-item.active .page-link {
+        background-color: #4361ee;
+        border-color: #4361ee;
+    }
+
+</style>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Your Saved Jobs</h1>
+        <a href="{% url 'job_search' %}" class="btn btn-outline-primary">
+            <i class="fas fa-search me-2"></i> Browse More Jobs
+        </a>
+    </div>
+
+    {% if saved_jobs %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for saved_job in saved_jobs %}
+            <div class="col">
+                <div class="card job-card h-100">
+                    <div class="job-card-header">
+                        <h3 class="job-card-title">{{ saved_job.job.title }}</h3>
+                        <h6 class="job-card-subtitle">{{ saved_job.job.company_name }}</h6>
+                        <span class="badge bg-primary">{{ saved_job.job.job_type }}</span>
+                    </div>
+                    
+                    <div class="job-card-body">
+                        <div class="job-meta">
+                            <span class="job-meta-item">
+                                <i class="fas fa-map-marker-alt text-muted"></i>
+                                {{ saved_job.job.location }}
+                            </span>
+                            {% if saved_job.job.salary_range %}
+                            <span class="job-meta-item">
+                                <i class="fas fa-dollar-sign text-muted"></i>
+                                {{ saved_job.job.salary_range }}
+                            </span>
+                            {% endif %}
+                            <span class="job-meta-item">
+                                <i class="fas fa-calendar-alt text-muted"></i>
+                                Saved {{ saved_job.created_at|timesince }} ago
+                            </span>
+                        </div>
+                        
+                        {% if saved_job.job.tags %}
+                        <div class="job-tags">
+                            {% for tag in saved_job.job.tags.split %}
+                            <span class="job-tag">{{ tag.strip }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}  
+                        
+                  
+                        
+                        <div class="job-description">
+                            {{ saved_job.job.description|truncatewords:25 }}
+                        </div>
+                    </div>
+                    
+                    <div class="job-card-footer d-flex justify-content-between align-items-center">
+                        <a href="{% url 'job_detail' saved_job.id %}" class="btn btn-outline-primary">
+                            View Details <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                        <button class="btn btn-success save-job-btn" data-job-id="{{ saved_job.job.id }}">
+                            <i class="fas fa-bookmark me-2"></i> Saved
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state text-center py-5">
+            <div class="empty-state-icon mb-4">
+                <i class="far fa-bookmark fa-4x text-muted"></i>
+            </div>
+            <h3 class="empty-state-title">No saved jobs yet</h3>
+            <p class="empty-state-text">When you save jobs, they'll appear here for easy access.</p>
+            <a href="{% url 'job_search' %}" class="btn btn-primary mt-3">
+                <i class="fas fa-search me-2"></i> Browse Jobs
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

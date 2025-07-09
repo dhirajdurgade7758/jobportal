@@ -1,0 +1,413 @@
+{% extends 'resume_generator/base.html' %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --dark-bg: #0d0d0d;  /* Darker background for better contrast */
+        --darker-bg: #080808;
+        --card-bg: #1a1a1a;
+        --primary-accent: #7b66ff;
+        --secondary-accent: #5e43f3;
+        --text-primary: #ffffff;  /* Pure white for best readability */
+        --text-secondary: #cccccc;  /* Brighter secondary text */
+        --border-color: #444;  /* More visible borders */
+    }
+    
+    body {
+        background-color: var(--dark-bg);
+        color: var(--text-primary);
+    }
+    
+    /* Force all text to use high-contrast colors */
+    [data-bs-theme="dark"] {
+        --bs-body-color: var(--text-primary);
+        --bs-body-bg: var(--dark-bg);
+        --bs-secondary-color: var(--text-secondary);
+    }
+    
+    .content-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        color: var(--text-primary) !important;  /* Force text color */
+    }
+    
+    /* Ensure all text in cards is visible */
+    .content-card,
+    .feature-card,
+    .step-card,
+    .testimonial-card {
+        color: var(--text-primary) !important;
+    }
+    
+    /* Improve text contrast in feature cards */
+    .feature-card {
+        background: linear-gradient(145deg, #222, #1a1a1a);
+        border: 1px solid var(--border-color);
+    }
+    
+    .feature-card h3,
+    .feature-card h4,
+    .feature-card h5 {
+        color: var(--text-primary) !important;
+    }
+    
+    .feature-card p {
+        color: var(--text-secondary) !important;
+    }
+    
+    /* Brighter text for steps */
+    .step-card h4,
+    .step-card p {
+        color: var(--text-primary) !important;
+    }
+    
+    /* Testimonial text improvements */
+    .testimonial-card .card-text {
+        color: var(--text-secondary) !important;
+    }
+    
+    .testimonial-card h6 {
+        color: var(--text-primary) !important;
+    }
+    
+    /* Make all muted text more visible */
+    .text-muted {
+        color: #999 !important;  /* Brighter than default */
+    }
+    
+    /* Improve form text visibility */
+    input::placeholder,
+    textarea::placeholder {
+        color: #aaa !important;
+    }
+    
+    /* Force all buttons to have visible text */
+    .btn {
+        color: white !important;
+    }
+    
+    .btn-outline-light {
+        color: var(--text-primary) !important;
+        border-color: #666;
+    }
+    
+    /* Make tooltips more visible */
+    .tooltip-inner {
+        background-color: #333;
+        color: white;
+    }
+    
+    /* Ensure dropdowns are visible */
+    .dropdown-menu {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+    }
+    
+    .dropdown-item {
+        color: var(--text-primary);
+    }
+    
+    .dropdown-item:hover {
+        background-color: #333;
+    }
+    
+    /* Override any existing text colors that might be too dark */
+    .text-dark, .text-black {
+        color: var(--text-primary) !important;
+    }
+       /* Button hover fixes */
+    .btn-glow:hover {
+        background: var(--secondary-accent);
+        box-shadow: 0 0 25px rgba(123, 102, 255, 0.8);
+        transform: translateY(-2px);
+        color: white !important; /* Force white text on hover */
+    }
+
+    .btn-outline-light:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        border-color: var(--text-primary) !important;
+        color: var(--text-primary) !important;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--secondary-accent) !important;
+        border-color: var(--secondary-accent) !important;
+        color: white !important;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: var(--primary-accent) !important;
+        color: white !important;
+    }
+
+    /* Remove any white transitions */
+    .btn {
+        transition: all 0.3s ease, background-color 0.15s linear !important;
+    }
+
+    /* Specific fix for the glowing button */
+    .btn-glow {
+        transition: all 0.3s ease, 
+                   box-shadow 0.3s ease,
+                   transform 0.3s ease,
+                   background-color 0.15s linear !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-card">
+    <div class="text-center mb-5 py-4">
+        <h1 class="display-4 gradient-text fw-bold mb-3">AI-Powered Resume Generator</h1>
+        <div class="typewriter">
+            <p class="lead text-white">Crafting resumes that get you hired in the digital age</p>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="feature-card p-4 h-100 rounded-4">
+                <div class="feature-icon mb-3">
+                    <i class="fas fa-robot fa-3x" style="background: linear-gradient(135deg, #7b66ff, #5e43f3); -webkit-background-clip: text; background-clip: text; color: transparent;"></i>
+                </div>
+                <h3 class="h4 mb-3">AI Optimization</h3>
+                <p class="text-secondary">Our neural networks analyze thousands of successful resumes to craft the perfect content for your target roles.</p>
+                <button class="btn btn-sm btn-outline-light mt-3" data-bs-toggle="tooltip" data-bs-placement="top" title="Uses GPT-4 technology">
+                    Learn More <i class="fas fa-arrow-right ms-1"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="feature-card p-4 h-100 rounded-4">
+                <div class="feature-icon mb-3">
+                    <i class="fas fa-palette fa-3x" style="background: linear-gradient(135deg, #ff66b8, #f343a0); -webkit-background-clip: text; background-clip: text; color: transparent;"></i>
+                </div>
+                <h3 class="h4 mb-3">Smart Templates</h3>
+                <p class="text-secondary">Dynamic templates that adapt to your content and industry standards with real-time previews.</p>
+                <button class="btn btn-sm btn-outline-light mt-3" data-bs-toggle="tooltip" data-bs-placement="top" title="10+ ATS-optimized designs">
+                    View Templates <i class="fas fa-external-link-alt ms-1"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="feature-card p-4 h-100 rounded-4">
+                <div class="feature-icon mb-3">
+                    <i class="fas fa-bolt fa-3x" style="background: linear-gradient(135deg, #66ffb3, #43f38b); -webkit-background-clip: text; background-clip: text; color: transparent;"></i>
+                </div>
+                <h3 class="h4 mb-3">Instant Results</h3>
+                <p class="text-secondary">From creation to download in under 5 minutes. Track application success rates with our analytics.</p>
+                <button class="btn btn-sm btn-outline-light mt-3" data-bs-toggle="tooltip" data-bs-placement="top" title="Real-time analytics dashboard">
+                    See Demo <i class="fas fa-play-circle ms-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        {% if user.is_authenticated %}
+            <a href="{% url 'resume_form' %}" class="btn btn-glow btn-lg px-5 py-3 rounded-pill">
+                <i class="fas fa-magic me-2"></i>Generate Your Resume
+            </a>
+        {% else %}
+            <a href="{% url 'login' %}?next={% url 'resume_form' %}" class="btn btn-glow btn-lg px-5 py-3 rounded-pill">
+                <i class="fas fa-rocket me-2"></i>Get Started Now
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="content-card mt-4">
+    <h2 class="gradient-text mb-5">How It Works</h2>
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="step-card p-4 h-100 rounded-3 position-relative overflow-hidden">
+                <div class="position-absolute top-0 end-0 px-3 py-1 bg-primary small">Step 1</div>
+                <div class="step-number bg-dark text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                    <i class="fas fa-user-edit fa-lg"></i>
+                </div>
+                <h4 class="h5 mb-3">Profile Setup</h4>
+                <p class="text-secondary small">Quickly enter your basic information with our intelligent form that auto-suggests improvements.</p>
+                <div class="progress mt-3" style="height: 4px;">
+                    <div class="progress-bar bg-primary" role="progressbar" style="width: 25%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="step-card p-4 h-100 rounded-3 position-relative overflow-hidden">
+                <div class="position-absolute top-0 end-0 px-3 py-1 bg-primary small">Step 2</div>
+                <div class="step-number bg-dark text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                    <i class="fas fa-briefcase fa-lg"></i>
+                </div>
+                <h4 class="h5 mb-3">Experience Builder</h4>
+                <p class="text-secondary small">Our AI helps transform your raw experience into compelling, achievement-oriented bullet points.</p>
+                <div class="progress mt-3" style="height: 4px;">
+                    <div class="progress-bar bg-primary" role="progressbar" style="width: 50%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="step-card p-4 h-100 rounded-3 position-relative overflow-hidden">
+                <div class="position-absolute top-0 end-0 px-3 py-1 bg-primary small">Step 3</div>
+                <div class="step-number bg-dark text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                    <i class="fas fa-cogs fa-lg"></i>
+                </div>
+                <h4 class="h5 mb-3">AI Enhancement</h4>
+                <p class="text-secondary small">Real-time optimization for applicant tracking systems with keyword suggestions.</p>
+                <div class="progress mt-3" style="height: 4px;">
+                    <div class="progress-bar bg-primary" role="progressbar" style="width: 75%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="step-card p-4 h-100 rounded-3 position-relative overflow-hidden">
+                <div class="position-absolute top-0 end-0 px-3 py-1 bg-primary small">Step 4</div>
+                <div class="step-number bg-dark text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px;">
+                    <i class="fas fa-file-download fa-lg"></i>
+                </div>
+                <h4 class="h5 mb-3">Download & Apply</h4>
+                <p class="text-secondary small">Get your professionally formatted PDF and track application responses with our dashboard.</p>
+                <div class="progress mt-3" style="height: 4px;">
+                    <div class="progress-bar bg-primary" role="progressbar" style="width: 100%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content-card mt-4">
+    <h2 class="gradient-text mb-5">Success Stories</h2>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="testimonial-card h-100 rounded-4 overflow-hidden" data-bs-toggle="modal" data-bs-target="#testimonialModal1" style="cursor: pointer;">
+                <div class="card-body">
+                    <div class="mb-3 text-warning">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="card-text fst-italic">"Landed 3 interviews in the first week after using this resume builder. The AI suggestions were game-changing!"</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <img src="https://randomuser.me/api/portraits/women/43.jpg" class="rounded-circle" width="50" height="50" alt="Sarah J.">
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0">Sarah J.</h6>
+                            <small class="text-muted">Product Manager at TechCorp</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="testimonial-card h-100 rounded-4 overflow-hidden" data-bs-toggle="modal" data-bs-target="#testimonialModal2" style="cursor: pointer;">
+                <div class="card-body">
+                    <div class="mb-3 text-warning">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p class="card-text fst-italic">"After months of rejections, I got 2 offers within 2 weeks of using the optimized resume from this tool."</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle" width="50" height="50" alt="Michael T.">
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0">Michael T.</h6>
+                            <small class="text-muted">Senior Developer at FinTech Inc</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="testimonial-card h-100 rounded-4 overflow-hidden" data-bs-toggle="modal" data-bs-target="#testimonialModal3" style="cursor: pointer;">
+                <div class="card-body">
+                    <div class="mb-3 text-warning">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="card-text fst-italic">"The template designs are so professional - I get compliments on my resume format at every interview!"</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <img src="https://randomuser.me/api/portraits/women/65.jpg" class="rounded-circle" width="50" height="50" alt="Priya K.">
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0">Priya K.</h6>
+                            <small class="text-muted">UX Designer at Creative Labs</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Interactive Elements -->
+<div class="content-card mt-4 text-center py-5">
+    <h2 class="gradient-text mb-4">Ready to Transform Your Career?</h2>
+    <p class="lead mb-4">Join <span class="text-primary fw-bold">10,000+</span> professionals who accelerated their job search with our AI</p>
+    <div class="d-flex justify-content-center gap-3">
+        <a href="{% url 'resume_form' %}" class="btn btn-glow btn-lg px-5 rounded-pill">
+            <i class="fas fa-play me-2"></i>Start Now
+        </a>
+        <a href="#features" class="btn btn-outline-light btn-lg px-4 rounded-pill" data-bs-toggle="modal" data-bs-target="#demoVideoModal">
+            <i class="fas fa-video me-2"></i>Watch Demo
+        </a>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize tooltips
+    $(function () {
+        $('[data-bs-toggle="tooltip"]').tooltip()
+    });
+    
+    // Animate cards on scroll
+    $(window).scroll(function() {
+        $('.feature-card').each(function() {
+            var cardPosition = $(this).offset().top;
+            var scrollPosition = $(window).scrollTop() + $(window).height();
+            
+            if (scrollPosition > cardPosition) {
+                $(this).addClass('animate__animated animate__fadeInUp');
+            }
+        });
+    });
+    
+    // Interactive testimonial cards
+    $('.testimonial-card').hover(
+        function() {
+            $(this).css('transform', 'translateY(-10px)');
+            $(this).find('.card-body').css('background', 'rgba(123, 102, 255, 0.05)');
+        },
+        function() {
+            $(this).css('transform', 'translateY(0)');
+            $(this).find('.card-body').css('background', 'transparent');
+        }
+    );
+</script>
+{% endblock %}
