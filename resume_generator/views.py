@@ -51,6 +51,7 @@ def generate_resume(request):
             # Generate AI resume content
             try:
                 ai_content = generate_resume_summary(resume_data)
+                print(ai_content)
             except Exception as e:
                 messages.error(request, f"AI generation failed: {str(e)}")
                 return redirect('resume_form')
